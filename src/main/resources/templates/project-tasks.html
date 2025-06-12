@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Project Tasks</title>
+    <style>
+        /* Basic styling for the page */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f7fa;
+            color: #333;
+            margin: 0;
+            padding: 0;
+        }
+
+        h2 {
+            color: #4CAF50;
+        }
+
+        h3 {
+            margin-top: 20px;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        th, td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #ddd;
+        }
+
+        th {
+            background-color: #f2f2f2;
+            color: #333;
+        }
+
+        td {
+            background-color: #fff;
+        }
+
+        tr:nth-child(even) td {
+            background-color: #f9f9f9;
+        }
+
+        .actions {
+            text-align: center;
+        }
+
+        button {
+            background-color: #f44336;
+            color: white;
+            padding: 6px 12px;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #e53935;
+        }
+    </style>
+</head>
+<body>
+    <h2 th:text="'Tasks for Project: ' + ${project.name}"></h2>
+    <p th:text="${project.description}"></p>
+
+    <a th:href="@{'/admin/project/' + ${project.id} + '/create-task-form'}">
+        <button type="button">+ Create Task</button>
+    </a>
+
+    <h3>Tasks</h3>
+    <table>
+        <thead>
+            <tr>
+                <th>Title</th>
+                <th>Description</th>
+                <th>Priority</th>
+                <th>Status</th>
+                <th>Assigned User</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr th:each="task : ${tasks}">
+                <td th:text="${task.title}"></td>
+                <td th:text="${task.description}"></td>
+                <td th:text="${task.priority}"></td>
+                <td th:text="${task.status}"></td>
+                <td th:text="${task.assignedUser.username}"></td>
+                <td class="actions">
+                    <!-- Show Delete button if task status is COMPLETED -->
+                    <form th:if="${task.status.name == 'COMPLETED'}" th:action="@{/tasks/admin/{taskId}/delete(taskId=${task.id})}" method="post">
+                        <button type="submit">Delete Task</button>
+                    </form>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+
+    <br/>
+    <a th:href="@{/admin/dashboard}">← Back to Dashboard</a>
+</body>
+</html>

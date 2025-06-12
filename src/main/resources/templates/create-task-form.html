@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Create Task</title>
+    <style>
+        /* Basic Reset */
+        body, h2, h3, p, form {
+            margin: 0;
+            padding: 0;
+        }
+
+        /* Overall Styling */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f7fa;
+            color: #333;
+            margin: 0;
+            padding: 20px;
+        }
+
+        h2 {
+            color: #4CAF50;
+            margin-bottom: 20px;
+        }
+
+        a {
+            color: #007bff;
+            text-decoration: none;
+        }
+
+        a:hover {
+            text-decoration: underline;
+        }
+
+        /* Form Styling */
+        form {
+            background-color: #ffffff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            max-width: 500px;
+            margin: 0 auto;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: bold;
+        }
+
+        input, select, textarea {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 15px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        textarea {
+            resize: vertical;
+            height: 100px;
+        }
+
+        button {
+            width: 100%;
+            padding: 10px;
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+
+        /* Back link styling */
+        .back-link {
+            display: block;
+            text-align: center;
+            margin-top: 20px;
+            font-size: 16px;
+        }
+
+        .back-link a {
+            color: #007bff;
+        }
+    </style>
+</head>
+<body>
+    <h2>Create Task for Project: <span th:text="${project.name}"></span></h2>
+
+    <form th:action="@{'/admin/project/' + ${project.id} + '/create-task'}" th:object="${task}" method="post">
+        <label>Task Title:</label><br/>
+        <input type="text" th:field="*{title}" required/><br/><br/>
+
+        <label>Description:</label><br/>
+        <textarea th:field="*{description}" required></textarea><br/><br/>
+
+        <label>Priority:</label><br/>
+        <select th:field="*{priority}">
+            <option value="LOW">Low</option>
+            <option value="MEDIUM">Medium</option>
+            <option value="HIGH">High</option>
+        </select><br/><br/>
+
+        <label>Deadline:</label><br/>
+        <input type="date" th:field="*{deadline}" required/><br/><br/>
+
+        <label>Assign User:</label><br/>
+        <select name="username">
+            <option th:each="user : ${users}" th:value="${user.username}" th:text="${user.username}"></option>
+        </select><br/><br/>
+
+        <button type="submit">Create Task</button>
+    </form>
+
+    <div class="back-link">
+        <a th:href="@{'/admin/project/' + ${project.id}}">← Back to Project Tasks</a>
+    </div>
+</body>
+</html>

@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>Project List</title>
+    <style>
+        /* Basic styling for the page */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f7fa;
+            color: #333;
+            margin: 0;
+            padding: 0;
+        }
+
+        h2 {
+            color: #4CAF50;
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        a {
+            background-color: #4CAF50;
+            color: white;
+            padding: 10px 20px;
+            text-decoration: none;
+            border-radius: 5px;
+            display: inline-block;
+            margin: 10px 0;
+        }
+
+        a:hover {
+            background-color: #45a049;
+        }
+
+        ul {
+            list-style-type: none;
+            padding: 0;
+            margin-top: 20px;
+        }
+
+        li {
+            background-color: #fff;
+            margin: 10px 0;
+            padding: 15px;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        li:hover {
+            background-color: #f9f9f9;
+        }
+
+        b {
+            font-size: 1.1em;
+            color: #4CAF50;
+        }
+
+        span {
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <h2>All Projects</h2>
+
+    <a th:href="@{/projects/create-form}">+ Create New Project</a>
+
+    <ul>
+        <li th:each="project : ${projects}">
+            <b th:text="${project.name}"></b> - 
+            <span th:text="${project.description}"></span>
+        </li>
+    </ul>
+</body>
+</html>

@@ -1,0 +1,142 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <title>User Tasks</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f7fa;
+            color: #333;
+            margin: 0;
+            padding: 0;
+        }
+
+        h2 {
+            text-align: center;
+            color: #4CAF50;
+            margin-top: 20px;
+        }
+
+        /* Styling for the table */
+        table {
+            width: 80%;
+            margin: 20px auto;
+            border-collapse: collapse;
+            background-color: #fff;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        th, td {
+            padding: 12px;
+            text-align: center;
+            border: 1px solid #ddd;
+        }
+
+        th {
+            background-color: #4CAF50;
+            color: white;
+        }
+
+        tr:nth-child(even) {
+            background-color: #f9f9f9;
+        }
+
+        tr:hover {
+            background-color: #f1f1f1;
+        }
+
+        select, button {
+            padding: 5px 10px;
+            margin-top: 5px;
+            font-size: 14px;
+            cursor: pointer;
+            border-radius: 5px;
+            border: 1px solid #ddd;
+        }
+
+        button {
+            background-color: #4CAF50;
+            color: white;
+            border: none;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+        
+        .logout-btn {
+            background-color: #f44336; /* Red color for logout button */
+            color: white;
+            font-size: 16px;
+            padding: 10px 20px;
+            cursor: pointer;
+            border: none;
+            border-radius: 5px;
+            float: right;
+            margin: 20px;
+        }
+        .delete-btn {
+    background-color: #f44336; /* Red */
+    color: white;
+    font-size: 14px;
+    padding: 5px 10px;
+    border: none;
+    border-radius: 5px;
+    margin-top: 5px;
+    cursor: pointer;
+}
+
+.delete-btn:hover {
+    background-color: #d32f2f; /* Darker red */
+}
+        .logout-btn:hover {
+            background-color: #d32f2f;
+        }
+
+    </style>
+</head>
+<body>
+    <h2>My Tasks</h2>
+
+    <!-- Logout Button -->
+    <form action="/logout" method="post" style="display:inline;">
+    <input type="hidden" name="_csrf" th:value="${_csrf.token}"/>
+    <button type="submit" class="logout-btn">Logout</button>
+</form>
+
+
+    <table border="1">
+        <tr>
+            <th>Project Name</th>
+            <th>Title</th>
+            <th>Description</th>
+            <th>Priority</th>
+            <th>Status</th>
+            <th>Deadline</th>
+            <th>Update Status</th>
+        </tr>
+        <tr th:each="task : ${tasks}" th:if="${task.visibleToUser}">
+            <td th:text="${task.project.name}"></td>
+            <td th:text="${task.title}"></td>
+            <td th:text="${task.description}"></td>
+            <td th:text="${task.priority}"></td>
+            <td th:text="${task.status}"></td>
+            <td th:text="${task.deadline}"></td>
+            <td>
+                <form th:action="@{/tasks/user/updateStatus}" method="post">
+                    <input type="hidden" name="taskId" th:value="${task.id}" />
+                    <select name="status">
+                        <option th:value="TODO" th:selected="${task.status.name() == 'TODO'}">TODO</option>
+                        <option th:value="IN_PROGRESS" th:selected="${task.status.name() == 'IN_PROGRESS'}">IN PROGRESS</option>
+                        <option th:value="COMPLETED" th:selected="${task.status.name() == 'COMPLETED'}">COMPLETED</option>
+                    </select>
+                    <button type="submit">Update</button>
+                </form>
+                <form th:action="@{/tasks/user/{taskId}/hide(taskId=${task.id})}" method="post" th:if="${task.status.name() == 'COMPLETED'}">
+                    <button type="submit" class="delete-btn">Delete Task</button>
+                </form>
+            </td>
+        </tr>
+    </table>
+</body>
+</html>
